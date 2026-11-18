@@ -782,3 +782,15 @@ article.pcard:nth-of-type(4n+2) .quick,article.pcard:nth-of-type(4n) .quick{back
 
 /* new tall model photos: show head to thighs in the product page */
 .pdp2 .mainimg.model img{transform:none;object-position:50% 0}
+
+/* product page: mobile layout (must come after the "smaller scale" overrides) */
+@media(max-width:900px){
+  .pdp2{grid-template-columns:1fr;gap:24px;max-width:none}
+  .pdp2 .gallery{grid-template-columns:1fr;gap:12px}
+  .pdp2 .thumbs{flex-direction:row;order:2}
+  .pdp2 .thumbs button{width:64px;flex:none}
+  .pdp2 .mainimg{aspect-ratio:1/1.1}
+  .pdp2 .buyrow{flex-wrap:nowrap}
+  .pdp2 .addbag{flex:1;white-space:nowrap;min-width:0;padding:0 12px}
+  .pdp2 .buyrow .qtybox,.pdp2 .buyrow .heartbtn{flex:none}
+}
