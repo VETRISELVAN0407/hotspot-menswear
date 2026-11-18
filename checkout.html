@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checkout — HOTSPOT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main>
+<div class="page-head"><div class="crumbs"><a href="index.html">Home</a> / <a href="cart.html">Bag</a> / Checkout</div><h1>Checkout</h1></div>
+<div id="coRoot"></div>
+</main>
+<div id="site-footer"></div>
+<script src="shared.js"></script>
+<script>
+
+const root=$('#coRoot');
+function render(){
+  const items=Cart.items();
+  if(!items.length){root.innerHTML='<div class="empty-cart"><h3>Your bag is empty</h3><p>Add something to your bag before checking out.</p><a class="btn" href="shop.html">Start shopping</a></div>';return}
+  const u=store.get('hs_user',{}),[fn,...ln]=(u.name||'').split(' ');
+  root.innerHTML=`<form class="cart-layout wrap" id="coForm" novalidate>
+  <div>
+    <div class="demo"><b>Demo checkout.</b> This store front-end does not charge cards or send orders anywhere yet. Orders are saved in this browser only.</div>
+    <div class="form-box"><h3>Contact</h3><div class="grid2">
+      <label class="field full">Email<input name="email" type="email" required autocomplete="email" value="${esc(u.email||'')}"></label>
+      <label class="field full">Phone<input name="phone" type="tel" required autocomplete="tel"></label></div></div>
+    <div class="form-box"><h3>Delivery address</h3><div class="grid2">
+      <label class="field">First name<input name="fn" required autocomplete="given-name" value="${esc(fn||'')}"></label>
+      <label class="field">Last name<input name="ln" required autocomplete="family-name" value="${esc(ln.join(' '))}"></label>
+      <label class="field full">Address<input name="addr" required autocomplete="street-address"></label>
+      <label class="field">City<input name="city" required autocomplete="address-level2"></label>
+      <label class="field">State / Province<input name="state" required autocomplete="address-level1"></label>
+      <label class="field">Postal code<input name="zip" required autocomplete="postal-code"></label>
+      <label class="field">Country<select name="country"><option>India</option><option>Canada</option><option>United States</option><option>United Kingdom</option><option>Other</option></select></label></div></div>
+    <div class="form-box"><h3>Delivery method</h3><div class="opts" id="shipOpts">
+      <label class="opt-row"><input type="radio" name="ship" value="std" checked><span>Standard<small>3–5 business days</small></span><b id="stdP"></b></label>
+      <label class="opt-row"><input type="radio" name="ship" value="exp"><span>Express<small>1–2 business days</small></span><b>${money(EXPRESS_FEE)}</b></label></div></div>
+    <div class="form-box"><h3>Payment</h3><div class="opts">
+      <label class="opt-row"><input type="radio" name="pay" value="card" checked><span>Credit / debit card</span></label>
+      <label class="opt-row"><input type="radio" name="pay" value="cod"><span>Cash on delivery</span></label></div>
+      <div class="grid2" id="cardBox" style="margin-top:14px">
+        <label class="field full">Card number<input name="cc" inputmode="numeric" autocomplete="off" placeholder="0000 0000 0000 0000"></label>
+        <label class="field">Expiry<input name="exp" placeholder="MM / YY" autocomplete="off"></label>
+        <label class="field">CVV<input name="cvv" inputmode="numeric" autocomplete="off" placeholder="123"></label></div></div>
+    <button class="btn block" style="padding:17px">Place order</button>
+  </div>
+  <aside class="summary"><h3>Order summary</h3><div id="miniItems"></div><div id="sumRows"></div>
+    <div class="promo-form" id="promoForm"><input id="promoIn" placeholder="Promo code" aria-label="Promo code"><button type="button" id="promoBtn">Apply</button></div><div class="note" id="promoNote"></div></aside></form>`;
+  const form=$('#coForm');
+  const shipVal=()=>form.ship.value==='exp'?EXPRESS_FEE:undefined;
+  function sums(){
+    const t=Cart.totals(shipVal());
+    $('#miniItems').innerHTML=Cart.items().map(c=>{const p=getP(c.id);return `<div class="miniitem"><div class="im"><img src="images/products/${p.id}.png" alt=""><em>${c.q}</em></div><div>${esc(p.name)}<small>Size ${c.size} · ${esc(p.color)}</small></div><span>${money(p.price*c.q)}</span></div>`}).join('');
+    $('#sumRows').innerHTML=`<div class="sum-row"><span>Subtotal</span><span>${money(t.sub)}</span></div>${t.disc?`<div class="sum-row"><span>Discount (${t.promo})</span><span class="green">−${money(t.disc)}</span></div>`:''}<div class="sum-row"><span>Shipping</span><span>${t.shipping?money(t.shipping):'Free'}</span></div><div class="sum-row"><span>Tax (5%)</span><span>${money(t.tax)}</span></div><div class="sum-row total"><span>Total</span><span>${money(t.total)}</span></div>`;
+    $('#stdP').textContent=Cart.totals().shipping?money(SHIP_FEE):'Free';
+    $('#promoIn').value=t.promo;$('#promoForm button').textContent=t.promo?'Remove':'Apply';
+  }
+  sums();
+  $$('input[name=ship]',form).forEach(r=>r.onchange=sums);
+  $$('input[name=pay]',form).forEach(r=>r.onchange=()=>{$('#cardBox').style.display=form.pay.value==='card'?'':'none'});
+  const applyPromo=()=>{
+    if(Cart.promo()){Cart.setPromo('');sums();return}
+    const c=$('#promoIn').value.trim().toUpperCase();
+    if(PROMOS[c]){Cart.setPromo(c);sums();toast('Promo applied')}else{$('#promoNote').textContent='That code is not valid.';$('#promoNote').style.color='#b3402c'}};
+  $('#promoBtn').onclick=applyPromo;
+  $('#promoIn').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();applyPromo()}};
+  form.onsubmit=e=>{
+    e.preventDefault();
+    const need=['email','phone','fn','ln','addr','city','state','zip'];if(form.pay.value==='card')need.push('cc','exp','cvv');
+    let bad=null;
+    need.forEach(n=>{const el=form[n],v=el.value.trim();let ok=!!v;if(n==='email')ok=/^\S+@\S+\.\S+$/.test(v);if(n==='cc')ok=v.replace(/\s/g,'').length>=12;el.classList.toggle('err',!ok);if(!ok&&!bad)bad=el});
+    if(bad){bad.focus();toast('Please complete the highlighted fields');return}
+    const t=Cart.totals(shipVal()),id='HS'+Date.now().toString().slice(-8);
+    const order={id,date:new Date().toISOString(),email:form.email.value.trim(),
+      name:form.fn.value.trim()+' '+form.ln.value.trim(),phone:form.phone.value.trim(),
+      address:[form.addr.value,form.city.value,form.state.value,form.zip.value,form.country.value].map(s=>s.trim()).join(', '),
+      ship:form.ship.value==='exp'?'Express':'Standard',pay:form.pay.value==='card'?'Card':'Cash on delivery',
+      items:Cart.items().map(c=>{const p=getP(c.id);return{id:c.id,name:p.name,price:p.price,size:c.size,q:c.q}}),totals:t,status:'Processing'};
+    const all=store.get('hs_orders',[]);all.unshift(order);store.set('hs_orders',all);
+    Cart.setPromo('');Cart.clear();
+    location.href='order-success.html?o='+id;
+  };
+}
+render();
+</script>
+</body>
+</html>

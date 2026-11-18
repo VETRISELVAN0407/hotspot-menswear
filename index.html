@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HOTSPOT — Menswear</title>
+<meta name="description" content="HOTSPOT menswear: tees, hoodies, shirts and knitwear made to be worn every day.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<div id="site-header"></div>
+
+<main>
+<section class="hero" style="background-image:url(images/room-bg.jpg)">
+  <div class="filters" id="filters">
+    <button class="active" data-f="all">All</button>
+    <button data-f="tshirts">T-Shirts</button>
+    <button data-f="hoodie">Hoodie</button>
+  </div>
+
+
+  <div class="rail">
+    <a class="on" href="index.html" aria-label="Outfits"><img src="images/icons/shirt-dark.png" alt=""></a>
+    <a href="shop.html" aria-label="Shop all"><img src="images/icons/grid-light.png" alt=""></a>
+    <a href="cart.html" aria-label="Bag"><img src="images/icons/bag-light.png" alt=""></a>
+    <a href="account.html" aria-label="Account"><img src="images/icons/person-light.png" alt=""></a>
+  </div>
+
+  <button class="arrow prev" id="prev" aria-label="Previous"><img src="images/icons/prev-light.png" alt=""></button>
+  <button class="arrow next" id="next" aria-label="Next"><img src="images/icons/next-light.png" alt=""></button>
+
+  <div class="stage"><img id="modelOld" src="" alt="" aria-hidden="true"><img id="model" src="" alt=""><div id="scanLine" class="scan-line"></div></div>
+  <div class="cards" id="cards"></div>
+
+  <div class="strip" id="strip"></div>
+
+  <div class="dock">
+    <img id="dockImg" src="" alt="">
+    <a class="dock-info" id="dockLink" href="shop.html"><b id="dockName"></b><span id="dockPrice"></span></a>
+    <button class="add" id="addBtn"><img src="images/icons/bag-light.png" alt="">Add to bag</button>
+  </div>
+</section>
+
+<section class="sbc">
+  <svg class="sbc-arc" viewBox="0 0 200 400" aria-hidden="true"><path d="M190 0C60 40 10 160 40 300c10 40 40 80 90 100" fill="none" stroke="#d9bd96" stroke-width="1.2"/></svg>
+  <svg class="sbc-leaf" viewBox="0 0 220 220" aria-hidden="true"><g fill="#8a9a6a" opacity=".75"><path d="M0 220C20 140 80 90 150 80c-20 50-60 100-150 140z"/><path d="M0 220C40 170 60 120 40 60c40 30 60 90 30 160z" opacity=".7"/><path d="M0 220c60-20 120-10 190-60-10 50-80 90-190 60z" opacity=".55"/></g></svg>
+  <div class="sbc-curve" aria-hidden="true"></div>
+  <div class="sbc-ghost" aria-hidden="true">Categories</div>
+  <div class="sbc-in">
+    <div class="sbc-head">
+      <div>
+        <span class="sbc-eyebrow">Browse</span>
+        <h2>Shop by <em>Category</em></h2>
+        <p>Find your perfect style, effortlessly.</p>
+      </div>
+      <a class="sbc-all" href="shop.html">Browse All <svg viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6"/></svg></a>
+    </div>
+    <div class="sbc-grid">
+      <a class="sbc-card light" href="shop.html?c=tshirts"><i class="n">01.</i><img src="images/products/ringer-tee.png" alt=""><div class="t"><b>T-Shirts</b><span>Casual Comfort<u></u></span></div><s><svg viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6"/></svg></s></a>
+      <a class="sbc-card dark" href="shop.html?c=shirts"><i class="n">02</i><img src="images/products/linen-shirt.png" alt=""><div class="t"><b>Shirts</b><span>Smart Looks<u></u></span></div><s><svg viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6"/></svg></s></a>
+      <a class="sbc-card light" href="shop.html?c=hoodie"><i class="n">03.</i><img src="images/products/hoodie.png" alt=""><div class="t"><b>Hoodies</b><span>Stay Cozy<u></u></span></div><s><svg viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6"/></svg></s></a>
+      <a class="sbc-card dark brown" href="shop.html?c=knitwear"><i class="n">04.</i><img src="images/products/oat-sweater.png" alt=""><div class="t"><b>Knitwear</b><span>Wear Warm<u></u></span></div><s><svg viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6"/></svg></s></a>
+    </div>
+    <div class="sbc-trust">
+      <div><svg viewBox="0 0 48 48"><path d="M24 12a4 4 0 114 4c-2 1-4 2-4 4v2M24 22L5 36h38z" fill="none"/></svg>Premium Quality</div>
+      <div><svg viewBox="0 0 48 48"><path d="M16 14h18v18H16zM34 20h7l4 6v6H34zM4 18h8M2 24h10M6 30h6" fill="none"/><circle cx="21" cy="35" r="3"/><circle cx="39" cy="35" r="3"/></svg>Free Shipping</div>
+      <div><svg viewBox="0 0 48 48"><path d="M24 5l15 5v12c0 10-6 17-15 21C15 39 9 32 9 22V10z" fill="none"/><path d="M17 24l5 5 9-10" fill="none"/></svg>Secure Payment</div>
+      <div><svg viewBox="0 0 48 48"><path d="M10 28v-6a14 14 0 0128 0v6M8 26h5v10H8zM35 26h5v10h-5zM38 36c0 5-5 6-12 6" fill="none"/></svg>24/7 Support</div>
+    </div>
+  </div>
+</section>
+
+<section class="sbc bs">
+  <div class="sbc-curve" aria-hidden="true"></div>
+  <div class="sbc-ghost" aria-hidden="true">Bestsellers</div>
+  <svg class="sbc-leaf" viewBox="0 0 220 220" aria-hidden="true"><g fill="#8a9a6a" opacity=".75"><path d="M0 220C20 140 80 90 150 80c-20 50-60 100-150 140z"/><path d="M0 220C40 170 60 120 40 60c40 30 60 90 30 160z" opacity=".7"/></g></svg>
+  <div class="sbc-in">
+    <div class="sbc-head">
+      <div>
+        <span class="sbc-eyebrow bs-eye">Most Loved</span>
+        <h2>Best <em>Sellers</em></h2>
+        <p>Timeless styles. Loved by many.</p>
+      </div>
+      <a class="sbc-all" href="shop.html">View All Products <svg viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6"/></svg></a>
+    </div>
+    <div class="pgrid" id="bestsellers"></div>
+    <div class="sbc-trust">
+      <div><svg viewBox="0 0 48 48"><path d="M13 8h22l8 11-19 22L5 19zM5 19h38M17 19l7 22 7-22M20 8l-3 11M28 8l3 11" fill="none"/></svg>Premium Quality</div>
+      <div><svg viewBox="0 0 48 48"><path d="M16 14h18v18H16zM34 20h7l4 6v6H34zM4 18h8M2 24h10M6 30h6" fill="none"/><circle cx="21" cy="35" r="3"/><circle cx="39" cy="35" r="3"/></svg>Free Shipping</div>
+      <div><svg viewBox="0 0 48 48"><path d="M24 5l15 5v12c0 10-6 17-15 21C15 39 9 32 9 22V10z" fill="none"/><path d="M17 24l5 5 9-10" fill="none"/></svg>Secure Payment</div>
+      <div><svg viewBox="0 0 48 48"><path d="M10 28v-6a14 14 0 0128 0v6M8 26h5v10H8zM35 26h5v10h-5zM38 36c0 5-5 6-12 6" fill="none"/></svg>24/7 Support</div>
+    </div>
+  </div>
+</section>
+
+<section class="promo">
+  <div class="wrap promo-in">
+    <div><span class="eyebrow gold">Our promise</span><h2>Repairs for a year.</h2><p>If something wears out or comes apart, we will fix it. Buy once, wear it for years.</p><a class="btn light" href="about.html">Our story</a></div>
+    <div class="promo-code"><small>First order</small><b>HOTSPOT10</b><span>Use this code at checkout for 10% off</span></div>
+  </div>
+</section>
+
+<section class="sbc bs alt">
+  <div class="sbc-curve" aria-hidden="true"></div>
+  <div class="sbc-ghost" aria-hidden="true">New in</div>
+  <svg class="sbc-arc" viewBox="0 0 200 400" aria-hidden="true"><path d="M190 0C60 40 10 160 40 300c10 40 40 80 90 100" fill="none" stroke="#d9bd96" stroke-width="1.2"/></svg>
+  <div class="sbc-in">
+    <div class="sbc-head">
+      <div>
+        <span class="sbc-eyebrow bs-eye">Just Landed</span>
+        <h2>New <em>In</em></h2>
+        <p>Fresh pieces, just arrived.</p>
+      </div>
+      <a class="sbc-all" href="shop.html">View All Products <svg viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6"/></svg></a>
+    </div>
+    <div class="pgrid" id="newin"></div>
+  </div>
+</section>
+
+<section class="sbc perks-sec">
+  <div class="sbc-in"><div class="perks">
+    <div><svg viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7zM7 19a1.8 1.8 0 100-3.6A1.8 1.8 0 007 19zm10 0a1.8 1.8 0 100-3.6 1.8 1.8 0 000 3.6z"/></svg><b>Free delivery</b><span>On every order over ₹4,999</span></div>
+    <div><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0114-5.3L20 4v6h-6l2.3-2.3A5.5 5.5 0 006.5 12M20 12a8 8 0 01-14 5.3L4 20v-6h6l-2.3 2.3A5.5 5.5 0 0017.5 12"/></svg><b>Easy returns</b><span>Not right? Send it back</span></div>
+    <div><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 00-5 5L3 18l3 3 6.7-6.7a4 4 0 005-5l-2.5 2.5-2-2z"/></svg><b>Repairs for a year</b><span>We fix what wears out</span></div>
+    <div><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5L16 9.5"/></svg><b>Secure checkout</b><span>Safe, simple payment</span></div>
+  </div></div>
+</section>
+</main>
+
+<div id="site-footer"></div>
+<script src="shared.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

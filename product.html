@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Product — HOTSPOT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main>
+<div id="pdpRoot"></div>
+<section class="sec wrap" id="relatedSec"><div class="sec-head"><span class="eyebrow">You may also like</span><h2>Complete the look</h2></div><div class="pgrid" id="related"></div></section>
+</main>
+<div id="site-footer"></div>
+<script src="shared.js"></script>
+<script>
+
+const p=getP(new URLSearchParams(location.search).get('id'));
+if(!p){
+  $('#pdpRoot').innerHTML='<div class="center-box"><h1>Product not found</h1><p>We could not find that item.</p><p style="margin-top:22px"><a class="btn" href="shop.html">Back to shop</a></p></div>';
+  $('#relatedSec').style.display='none';
+}else{
+  document.title=p.name+' — HOTSPOT';
+  let size='M',qty=1;
+  const imgs=[{src:`images/products/${p.id}.png`,cls:''},{src:`images/models/${p.id}.png`,cls:'model'}];
+  const ids=PRODUCTS.map(x=>x.id),base=ids.filter(i=>p.id===i||p.id.startsWith(i+'-')).sort((x,y)=>x.length-y.length)[0]||p.id;
+  const group=PRODUCTS.filter(x=>x.id===base||x.id.startsWith(base+'-'));
+  const off=p.mrp&&p.mrp>p.price?Math.round((1-p.price/p.mrp)*100):0;
+  const ic=d=>`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+  const leaf='<g fill="#8a9a6a" opacity=".75"><path d="M0 220C20 140 80 90 150 80c-20 50-60 100-150 140z"/><path d="M0 220C40 170 60 120 40 60c40 30 60 90 30 160z" opacity=".7"/></g>';
+  const wOn=Wish.has(p.id);
+  $('#pdpRoot').innerHTML=`<div class="pdp-bg">
+  <svg class="sbc-leaf pl-tl" viewBox="0 0 220 220" aria-hidden="true">${leaf}</svg>
+  <svg class="sbc-leaf pl-br" viewBox="0 0 220 220" aria-hidden="true">${leaf}</svg>
+  <div class="sbc-curve" aria-hidden="true"></div><div class="pdp-curve2" aria-hidden="true"></div>
+  <div class="pdp-ghost" aria-hidden="true">Premium<span>Style</span></div>
+  <div class="wrap"><div class="crumbs"><a href="index.html" class="hm">${ic('<path d="M3 11l9-8 9 8M5 10v10h14V10"/>')}Home</a> / <a href="shop.html">Shop</a> / <a href="shop.html?c=${p.cat}">${catName(p.cat)}</a> / ${esc(p.name)}</div></div>
+  <div class="pdp2 wrap">
+    <div class="pleft">
+      <div class="gallery"><div class="thumbs" id="thumbs">${imgs.map((m,i)=>`<button data-v="${i}" aria-label="View ${i+1}"><img src="${m.src}" alt=""></button>`).join('')}</div>
+        <div class="mainimg" id="mainimg"><img id="mainI" src="" alt="${esc(p.name)}">
+          <button class="mi-heart wh ${wOn?'on':''}" id="wishTop" aria-label="Save to wishlist">${heartSVG}</button>
+          <button class="mi-full" id="fullBtn" aria-label="View full screen">${ic('<path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/>')}</button></div></div>
+      <div class="ptabs"><div class="tabbar" id="tabbar"><button class="on" data-t="d">Details</button><button data-t="s">Size guide</button><button data-t="r">Shipping &amp; returns</button></div>
+        <div class="tabbody" id="tabbody"></div></div>
+    </div>
+    <div class="info">
+      ${p.badge?`<span class="pbadge">${esc(p.badge)}</span>`:''}<h1>${esc(p.name)}</h1>
+      <div class="rating"><span class="st">${stars(p.rating)}</span><span>${p.rating} • ${p.reviews} reviews</span></div>
+      <div class="price"><span>${money(p.price)}</span>${off?`<s>${money(p.mrp)}</s><em>${off}% OFF</em>`:''}</div>
+      <p class="desc">${esc(p.desc)}</p>
+      <div class="opt"><h4>Size</h4><div class="sizes" id="sizes">${SIZES.map(s=>`<button data-s="${s}" class="${s===size?'on':''}">${s}</button>`).join('')}</div></div>
+      <div class="buyrow"><div class="qtybox"><button id="qm" aria-label="Decrease">−</button><span id="qv">1</span><button id="qp" aria-label="Increase">+</button></div>
+        <button class="btn addbag" id="addBtn">${ic('<path d="M5 8h14l-1 12H6zM9 8V6a3 3 0 016 0v2"/>')}Add to bag</button>
+        <button class="heartbtn wh ${wOn?'on':''}" id="wishBtn" aria-label="Save to wishlist">${heartSVG}</button></div>
+      <button class="btn ghost block buynow" id="buyNow">${ic('<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>')}Buy it now</button>
+      <div class="ptrust">
+        <div>${ic('<path d="M2 6h11v10H2zM13 10h4l3 3v3h-7zM6 19a1.8 1.8 0 100-3.6A1.8 1.8 0 006 19zm10 0a1.8 1.8 0 100-3.6 1.8 1.8 0 000 3.6z"/>')}<span><b>Free Shipping</b>Above ${money(FREE_SHIP)}</span></div>
+        <div>${ic('<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5L16 9.5"/>')}<span><b>Secure Payment</b>100% Secure</span></div>
+        <div>${ic('<path d="M5 14v-2a7 7 0 0114 0v2M4 14h3v5H4zM17 14h3v5h-3zM19 19c0 2-2 3-6 3"/>')}<span><b>24/7 Support</b>We are here to help</span></div>
+      </div>
+    </div></div></div>`;
+  const tabs={d:`<ul>${p.details.map(d=>`<li>${esc(d)}</li>`).join('')}</ul>`,
+    s:`<ul><li>Our pieces are cut to a true-to-size fit.</li><li>Between sizes? Size up for a relaxed look.</li><li>Need help choosing? Contact us any time.</li></ul>`,
+    r:`<ul><li>Free delivery on orders over ${money(FREE_SHIP)}, otherwise a flat ${money(SHIP_FEE)}.</li><li>Not the right fit? Send it back for an exchange or refund.</li><li>${esc(p.details[p.details.length-1])}. Repairs for a year, on us.</li></ul>`};
+  const showTab=t=>{$('#tabbody').innerHTML=tabs[t];$$('#tabbar button').forEach(b=>b.classList.toggle('on',b.dataset.t===t))};
+  $$('#tabbar button').forEach(b=>b.onclick=()=>showTab(b.dataset.t));showTab('d');
+  $('#fullBtn').onclick=()=>{const e=$('#mainimg');(document.fullscreenElement?document.exitFullscreen():e.requestFullscreen&&e.requestFullscreen())};
+  const setView=i=>{$('#mainI').src=imgs[i].src;$('#mainimg').className='mainimg '+imgs[i].cls;$$('#thumbs button').forEach((b,j)=>b.classList.toggle('on',j===i))};
+  $$('#thumbs button').forEach(b=>b.onclick=()=>setView(+b.dataset.v));setView(0);
+  $$('#sizes button').forEach(b=>b.onclick=()=>{size=b.dataset.s;$$('#sizes button').forEach(x=>x.classList.toggle('on',x===b))});
+  $('#qm').onclick=()=>{qty=Math.max(1,qty-1);$('#qv').textContent=qty};
+  $('#qp').onclick=()=>{qty=Math.min(10,qty+1);$('#qv').textContent=qty};
+  $('#addBtn').onclick=()=>{Cart.add(p.id,size,qty);Drawer.open()};
+  $('#buyNow').onclick=()=>{Cart.add(p.id,size,qty);location.href='checkout.html'};
+  const doWish=()=>{const on=Wish.toggle(p.id);$('#wishBtn').classList.toggle('on',on);$('#wishTop').classList.toggle('on',on);toast(on?'Saved to wishlist':'Removed from wishlist')};
+  $('#wishBtn').onclick=doWish;$('#wishTop').onclick=doWish;
+  const rel=PRODUCTS.filter(x=>x.id!==p.id).sort((a,b)=>(b.cat===p.cat)-(a.cat===p.cat)).slice(0,4);
+  $('#related').innerHTML=rel.map(cardHTML).join('');bindCards($('#related'));
+}
+</script>
+</body>
+</html>

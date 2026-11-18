@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact us — HOTSPOT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main>
+<div class="page-head"><div class="crumbs"><a href="index.html">Home</a> / Contact</div><h1>Contact us</h1><p>Questions about an order, sizing or repairs? We are here to help.</p></div>
+<div class="split">
+  <div class="contact-info">
+    <div><b>Email</b>hello@hotspot.example</div>
+    <div><b>Phone</b>+00 00000 00000</div>
+    <div><b>Store address</b>Your store address, City, Country</div>
+    <div><b>Hours</b>Mon – Sat, 10:00 – 19:00</div>
+  </div>
+  <form class="form-box stack" id="cForm" novalidate><h3>Send a message</h3>
+    <label class="field">Name<input name="name" required autocomplete="name"></label>
+    <label class="field">Email<input name="email" type="email" required autocomplete="email"></label>
+    <label class="field">Subject<select name="subject"><option>Order help</option><option>Sizing</option><option>Repairs</option><option>Other</option></select></label>
+    <label class="field">Message<textarea name="msg" rows="5" required></textarea></label>
+    <button class="btn block">Send message</button></form>
+</div>
+<div class="faq"><h2 class="serif">Quick answers</h2><div class="acc">
+<details><summary>How long does delivery take?</summary><p>Standard delivery takes 3–5 business days and express takes 1–2. Orders over ₹4,999 ship free.</p></details>
+<details><summary>Can I return an item?</summary><p>Yes. If it is not right, send it back for an exchange or refund.</p></details>
+<details><summary>How do repairs work?</summary><p>If a piece wears out or comes apart within a year, contact us and we will repair it.</p></details>
+<details><summary>Is there a discount code?</summary><p>Use HOTSPOT10 at checkout for 10% off.</p></details></div></div>
+</main>
+<div id="site-footer"></div>
+<script src="shared.js"></script>
+<script>
+
+const f=$('#cForm');
+f.onsubmit=e=>{e.preventDefault();let bad=null;
+  ['name','email','msg'].forEach(n=>{const el=f[n],v=el.value.trim(),ok=n==='email'?/^\S+@\S+\.\S+$/.test(v):!!v;el.classList.toggle('err',!ok);if(!ok&&!bad)bad=el});
+  if(bad){bad.focus();return}
+  f.reset();toast('Thanks! Your message has been noted.')};
+</script>
+</body>
+</html>

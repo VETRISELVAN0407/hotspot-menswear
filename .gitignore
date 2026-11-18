@@ -1,0 +1,4 @@
+images/models_backup_*/
+images/models_orig/
+images/products_orig/
+*.bak

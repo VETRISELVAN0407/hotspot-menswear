@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My account — HOTSPOT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main>
+<div class="page-head"><div class="crumbs"><a href="index.html">Home</a> / Account</div><h1>My account</h1></div>
+<div id="accRoot"></div>
+</main>
+<div id="site-footer"></div>
+<script src="shared.js"></script>
+<script>
+
+function draw(){
+  const u=store.get('hs_user',null);
+  if(!u){
+    $('#accRoot').innerHTML=`<div class="narrow"><div class="demo"><b>Demo accounts.</b> Sign-in is stored in this browser only. Connect a real login service before going live.</div>
+    <div class="tabs"><button class="on" data-t="in">Sign in</button><button data-t="up">Create account</button></div>
+    <form class="stack" id="fIn"><label class="field">Email<input name="email" type="email" required autocomplete="email"></label><label class="field">Password<input name="pw" type="password" required autocomplete="current-password"></label><button class="btn block">Sign in</button></form>
+    <form class="stack" id="fUp" style="display:none"><label class="field">Full name<input name="name" required autocomplete="name"></label><label class="field">Email<input name="email" type="email" required autocomplete="email"></label><label class="field">Password<input name="pw" type="password" required minlength="6" autocomplete="new-password"></label><button class="btn block">Create account</button></form></div>`;
+    $$('.tabs button').forEach(b=>b.onclick=()=>{$$('.tabs button').forEach(x=>x.classList.toggle('on',x===b));$('#fIn').style.display=b.dataset.t==='in'?'':'none';$('#fUp').style.display=b.dataset.t==='up'?'':'none'});
+    const ok=(email,name)=>{store.set('hs_user',{email,name:name||email.split('@')[0]});toast('Welcome!');draw()};
+    $('#fIn').onsubmit=e=>{e.preventDefault();const f=e.target;if(!f.email.value.trim()||!f.pw.value){return}const old=store.get('hs_known',{})[f.email.value.trim().toLowerCase()];ok(f.email.value.trim(),old)};
+    $('#fUp').onsubmit=e=>{e.preventDefault();const f=e.target;if(f.pw.value.length<6){toast('Password needs 6+ characters');return}const k=store.get('hs_known',{});k[f.email.value.trim().toLowerCase()]=f.name.value.trim();store.set('hs_known',k);ok(f.email.value.trim(),f.name.value.trim())};
+    return;
+  }
+  const orders=store.get('hs_orders',[]);
+  $('#accRoot').innerHTML=`<div class="narrow" style="max-width:760px"><div class="form-box" style="display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap"><div><span class="eyebrow">Signed in</span><h3 style="margin:0">${esc(u.name)}</h3><small style="color:var(--muted)">${esc(u.email)}</small></div><button class="btn ghost" id="out">Sign out</button></div>
+  <div class="form-box"><h3>My orders</h3>${orders.length?orders.map(o=>`<div class="order-line"><span><b>${o.id}</b><small>${new Date(o.date).toLocaleDateString()} · ${o.items.reduce((s,i)=>s+i.q,0)} item(s)</small></span><span class="pill">${o.status}</span><b>${money(o.totals.total)}</b></div>`).join(''):'<p class="note">You have not placed any orders yet.</p><p style="margin-top:14px"><a class="btn" href="shop.html">Start shopping</a></p>'}</div></div>`;
+  $('#out').onclick=()=>{store.set('hs_user',null);draw()};
+}
+draw();
+</script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your Bag — HOTSPOT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main>
+<div class="page-head"><div class="crumbs"><a href="index.html">Home</a> / Bag</div><h1>Your bag</h1></div>
+<div id="cartRoot"></div>
+</main>
+<div id="site-footer"></div>
+<script src="shared.js"></script>
+<script>
+
+function draw(){
+  const items=Cart.items();
+  if(!items.length){$('#cartRoot').innerHTML='<div class="empty-cart"><h3>Your bag is empty</h3><p>Looks like you have not added anything yet.</p><a class="btn" href="shop.html">Start shopping</a></div>';return}
+  const t=Cart.totals(),left=Math.max(0,FREE_SHIP-(t.sub-t.disc));
+  $('#cartRoot').innerHTML=`<div class="cart-layout wrap">
+  <div>
+    <div class="shipbar"><b>${left?money(left):'You qualify'}</b> ${left?'away from free delivery':'for free delivery'}<div class="bar"><i style="width:${Math.min(100,(t.sub-t.disc)/FREE_SHIP*100)}%"></i></div></div>
+    <div class="cart-head"><span>PRODUCT</span><span>TOTAL</span></div>
+    ${items.map((c,i)=>{const p=getP(c.id);return `<div class="cart-row"><a class="im" href="product.html?id=${p.id}"><img src="images/products/${p.id}.png" alt=""></a>
+      <div><h3><a href="product.html?id=${p.id}" style="text-decoration:none">${esc(p.name)}</a></h3><small>${money(p.price)} · Size ${c.size}</small><small>${esc(p.color)}</small>
+      <div class="acts"><span class="qty"><button data-d="-1" data-i="${i}" aria-label="Decrease">−</button>${c.q}<button data-d="1" data-i="${i}" aria-label="Increase">+</button></span><button class="rm" data-rm="${i}">Remove</button></div></div>
+      <div class="tot">${money(p.price*c.q)}</div></div>`}).join('')}
+    <p style="margin-top:20px"><a href="shop.html" class="more">← Continue shopping</a></p>
+  </div>
+  <aside class="summary"><h3>Order summary</h3>
+    <div class="sum-row"><span>Subtotal</span><span>${money(t.sub)}</span></div>
+    ${t.disc?`<div class="sum-row"><span>Discount (${t.promo})</span><span class="green">−${money(t.disc)}</span></div>`:''}
+    <div class="sum-row"><span>Shipping</span><span>${t.shipping?money(t.shipping):'Free'}</span></div>
+    <div class="sum-row"><span>Tax (5%)</span><span>${money(t.tax)}</span></div>
+    <div class="sum-row total"><span>Total</span><span>${money(t.total)}</span></div>
+    <form class="promo-form" id="promoForm"><input id="promoIn" placeholder="Promo code" value="${t.promo}" aria-label="Promo code"><button>${t.promo?'Remove':'Apply'}</button></form>
+    <div class="note" id="promoNote">Try <b>HOTSPOT10</b> for 10% off.</div>
+    <a class="btn block" href="checkout.html" style="margin-top:18px">Check out</a>
+  </aside></div>`;
+  $$('[data-d]').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;Cart.setQty(i,Cart.items()[i].q+ +b.dataset.d)});
+  $$('[data-rm]').forEach(b=>b.onclick=()=>Cart.remove(+b.dataset.rm));
+  $('#promoForm').onsubmit=e=>{e.preventDefault();
+    if(Cart.promo()){Cart.setPromo('');return}
+    const c=$('#promoIn').value.trim().toUpperCase();
+    if(PROMOS[c]){Cart.setPromo(c);toast('Promo applied')}else{$('#promoNote').textContent='That code is not valid.';$('#promoNote').style.color='#b3402c'}};
+}
+document.addEventListener('cart:change',draw);draw();
+</script>
+</body>
+</html>

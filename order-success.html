@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Order placed — HOTSPOT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main>
+<div id="okRoot"></div>
+</main>
+<div id="site-footer"></div>
+<script src="shared.js"></script>
+<script>
+
+const o=store.get('hs_orders',[]).find(x=>x.id===new URLSearchParams(location.search).get('o'));
+if(!o){$('#okRoot').innerHTML='<div class="center-box"><h1>No order found</h1><p>We could not find that order in this browser.</p><p style="margin-top:22px"><a class="btn" href="shop.html">Continue shopping</a></p></div>'}
+else $('#okRoot').innerHTML=`<div class="center-box"><div class="tick">✓</div><span class="eyebrow">Thank you</span><h1>Your order is placed</h1><p>Order <b>${o.id}</b> · A confirmation will be sent to ${esc(o.email)}.</p></div>
+<div class="narrow" style="max-width:640px"><div class="form-box order-card">
+  <h3>Order summary</h3>
+  ${o.items.map(i=>`<div class="order-line"><span>${esc(i.name)} × ${i.q}<small>Size ${i.size}</small></span><b>${money(i.price*i.q)}</b></div>`).join('')}
+  <div class="sum-row" style="margin-top:10px"><span>Subtotal</span><span>${money(o.totals.sub)}</span></div>
+  ${o.totals.disc?`<div class="sum-row"><span>Discount</span><span class="green">−${money(o.totals.disc)}</span></div>`:''}
+  <div class="sum-row"><span>Shipping (${o.ship})</span><span>${o.totals.shipping?money(o.totals.shipping):'Free'}</span></div>
+  <div class="sum-row"><span>Tax</span><span>${money(o.totals.tax)}</span></div>
+  <div class="sum-row total"><span>Total</span><span>${money(o.totals.total)}</span></div>
+  <p class="note" style="margin-top:16px"><b>Delivering to:</b> ${esc(o.name)}, ${esc(o.address)}<br><b>Payment:</b> ${o.pay}</p></div>
+  <p style="text-align:center;display:flex;gap:12px;justify-content:center;flex-wrap:wrap"><a class="btn" href="shop.html">Continue shopping</a><a class="btn ghost" href="account.html">View my orders</a></p></div>`;
+</script>
+</body>
+</html>

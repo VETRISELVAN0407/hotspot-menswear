@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Saved items — HOTSPOT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="pages.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main>
+<div class="page-head"><div class="crumbs"><a href="index.html">Home</a> / Saved</div><h1>Saved items</h1><p>Pieces you have your eye on</p></div>
+<section class="shop wrap"><div class="pgrid" id="grid"></div></section>
+</main>
+<div id="site-footer"></div>
+<script src="shared.js"></script>
+<script>
+
+function draw(){
+  const a=Wish.ids().map(getP);
+  $('#grid').innerHTML=a.length?a.map(cardHTML).join(''):'<div class="empty-state" style="grid-column:1/-1"><h3>Nothing saved yet</h3><p>Tap the heart on any product to save it here.</p><a class="btn" href="shop.html">Browse products</a></div>';
+  bindCards($('#grid'));
+}
+document.addEventListener('wish:change',draw);draw();
+</script>
+</body>
+</html>
