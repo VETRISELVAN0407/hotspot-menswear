@@ -15,16 +15,15 @@ function scan(src,alt){
     if(src!==curSrc)return;
     if(first){m.src=src;m.alt=alt;return}
     // old image stays underneath; the new one is revealed from the top, in front of it
-    o.src=m.src;o.style.opacity=1;
+    // old model is hidden; the new one is revealed from the top by the scan line
+    o.style.opacity=0;o.removeAttribute('src');
     m.src=src;m.alt=alt;
     const f={duration:900,easing:'cubic-bezier(.55,.1,.35,1)',fill:'forwards'};
-    // above the line: only the new image; below the line: only the old image
     scanAnim=[
       m.animate([{clipPath:'inset(0 0 100% 0)'},{clipPath:'inset(0 0 0% 0)'}],f),
-      o.animate([{clipPath:'inset(0% 0 0 0)'},{clipPath:'inset(100% 0 0 0)'}],f),
       ln.animate([{top:'0%',opacity:0},{opacity:1,offset:.08},{opacity:1,offset:.92},{top:'100%',opacity:0}],f)
     ];
-    scanAnim[0].onfinish=()=>{o.style.opacity=0;scanAnim.forEach(x=>x.cancel());scanAnim=[]};
+    scanAnim[0].onfinish=()=>{scanAnim.forEach(x=>x.cancel());scanAnim=[]};
   };
   img.src=src;
 }
